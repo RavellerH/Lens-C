@@ -119,6 +119,43 @@
   border-color: var(--color-accent);
 }
 
+.media-modal__providers {
+  margin-top: var(--space-lg);
+}
+
+.media-modal__provider-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.media-modal__provider-chip {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: border-color var(--transition-fast);
+}
+
+.media-modal__provider-chip:hover {
+  border-color: var(--color-accent);
+}
+
+.media-modal__provider-chip--netflix {
+  border-color: #e50914;
+  color: #e50914;
+}
+
+.media-modal__providers-note {
+  margin-top: var(--space-xs);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
 .media-modal__cast {
   margin-top: var(--space-lg);
 }

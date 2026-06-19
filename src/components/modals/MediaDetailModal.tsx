@@ -2,7 +2,12 @@ import { useEffect } from 'react';
 import type { MediaItem } from '../../types/media';
 import { formatRating, formatRuntime } from '../../utils/formatters';
 import { useWatchlist } from '../../app/store/watchlistStore';
+import { useSettings } from '../../app/store/settingsStore';
+import { useCachedFetch } from '../../app/hooks/useCachedFetch';
+import { justwatchAdapter } from '../../services/adapters/justwatch/justwatchAdapter';
 import './MediaDetailModal.css';
+
+const STREAMING_CACHE_MAX_AGE_MS = 1000 * 60 * 60 * 12;
 
 interface MediaDetailModalProps {
   item: MediaItem;
@@ -11,8 +16,16 @@ interface MediaDetailModalProps {
 
 export function MediaDetailModal({ item, onClose }: MediaDetailModalProps) {
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
+  const { settings } = useSettings();
   const inWatchlist = isInWatchlist(item.id);
   const backdrop = item.backdropUrl ?? undefined;
+
+  // Best-effort lookup against JustWatch's undocumented API — failures degrade to "no section shown," never an error banner.
+  const streaming = useCachedFetch(
+    `streaming:${item.title}:${item.year ?? ''}:${settings.region}`,
+    () => justwatchAdapter.getStreamingOffers(item.title, { region: settings.region }, item.year),
+    STREAMING_CACHE_MAX_AGE_MS,
+  );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -62,6 +75,25 @@ export function MediaDetailModal({ item, onClose }: MediaDetailModalProps) {
               {inWatchlist ? 'Remove from watchlist' : '+ Add to watchlist'}
             </button>
           </div>
+          {streaming.data && streaming.data.length > 0 && (
+            <div className="media-modal__providers">
+              <h3 className="rail__title">Where to watch</h3>
+              <div className="media-modal__provider-list">
+                {streaming.data.map((offer) => (
+                  <a
+                    key={offer.providerShortName}
+                    href={offer.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`media-modal__provider-chip${offer.providerShortName === 'nfx' ? ' media-modal__provider-chip--netflix' : ''}`}
+                  >
+                    {justwatchAdapter.labelFor(offer)}
+                  </a>
+                ))}
+              </div>
+              <p className="media-modal__providers-note">Availability via JustWatch — may not always be current.</p>
+            </div>
+          )}
           {item.cast && item.cast.length > 0 && (
             <div className="media-modal__cast">
               <h3 className="rail__title">Cast</h3>

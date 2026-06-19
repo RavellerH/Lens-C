@@ -179,6 +179,12 @@ Constraints: no stable ids into iTunes/TVmaze in the export, must match by title
 
 MovieLens can be used offline for testing algorithms, calibrating similarity, or shipping lightweight precomputed recommendation helpers in future phases.
 
+### JustWatch (streaming availability, best-effort)
+
+The media detail modal shows a "Where to watch" section, sourced from JustWatch's undocumented content API (no key, no signup — but also no official support contract). It's used for a single per-title lookup when a user opens detail, never for bulk rail filtering, to avoid hammering an API we don't have a real agreement with.
+
+Constraints: unofficial and reverse-engineered — endpoint shape, rate limits, or CORS behavior could change or break without notice. The app treats any failure (network error, CORS block, empty/unexpected response) as "unknown availability" and simply omits the section, never as "not available." Netflix gets a visual highlight when present since it's the most commonly requested provider, but the same lookup surfaces whatever providers JustWatch returns (Prime Video, Max, Disney+, etc.).
+
 ## Data model
 
 The app is client-first and stores most working data in memory plus local browser storage.
