@@ -1,0 +1,98 @@
+.settings-page h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: var(--space-lg);
+}
+
+.settings-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  max-width: 640px;
+}
+
+.settings-section h2 {
+  font-size: 1.05rem;
+  margin-bottom: var(--space-xs);
+}
+
+.settings-section__desc {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-md);
+}
+
+.settings-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.settings-field:first-of-type {
+  border-top: none;
+}
+
+.settings-field label {
+  font-size: 0.9rem;
+}
+
+.settings-field select,
+.settings-field input[type='text'] {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.settings-field input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+.settings-row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.settings-row button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+.settings-row button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-danger-btn {
+  border: 1px solid var(--color-error);
+  background: var(--color-surface-raised);
+  color: var(--color-error);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+.settings-section__note {
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+  margin-top: var(--space-sm);
+}
+
+.settings-import-result {
+  margin-top: var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--color-success);
+}

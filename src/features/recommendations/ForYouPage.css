@@ -1,0 +1,18 @@
+.for-you-page__intro {
+  margin-bottom: var(--space-xl);
+}
+
+.for-you-page__intro h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: var(--space-xs);
+}
+
+.for-you-page__intro p {
+  color: var(--color-text-muted);
+}
+
+.for-you-page__intro a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}

@@ -1,0 +1,29 @@
+.about-page {
+  max-width: 720px;
+}
+
+.about-page h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: var(--space-lg);
+}
+
+.about-page section {
+  margin-bottom: var(--space-lg);
+}
+
+.about-page h2 {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-sm);
+}
+
+.about-page p,
+.about-page li {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.about-page a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}

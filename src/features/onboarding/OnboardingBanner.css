@@ -1,0 +1,38 @@
+.onboarding-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  background: linear-gradient(120deg, rgba(45, 212, 212, 0.12), rgba(217, 70, 168, 0.1));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.onboarding-banner__text strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.onboarding-banner__text span {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+
+.onboarding-banner__cta {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .onboarding-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

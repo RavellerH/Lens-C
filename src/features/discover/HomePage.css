@@ -1,0 +1,21 @@
+.home-page__setup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  min-height: 60vh;
+  justify-content: center;
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.home-page__setup h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.home-page__setup p {
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}

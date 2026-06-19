@@ -1,0 +1,98 @@
+.command-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-md) var(--space-xl);
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.command-bar__brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.command-bar__brand span {
+  color: var(--color-accent);
+}
+
+.command-bar__nav {
+  display: flex;
+  gap: var(--space-md);
+  flex: 1;
+  overflow-x: auto;
+}
+
+.command-bar__link {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  padding: var(--space-sm) var(--space-sm);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.command-bar__link:hover {
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+}
+
+.command-bar__link--active {
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+}
+
+.command-bar__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.command-bar__search input {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  width: 200px;
+  transition: border-color var(--transition-fast);
+}
+
+.command-bar__search input:focus {
+  border-color: var(--color-accent);
+}
+
+.command-bar__settings {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.command-bar__settings:hover {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+@media (max-width: 720px) {
+  .command-bar {
+    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-sm);
+  }
+  .command-bar__search input {
+    width: 120px;
+  }
+}
