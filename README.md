@@ -1,4 +1,4 @@
-# CineWeave
+# Lens C
 
 A cinematic, static-first movie and series recommendation app. Built with React + Vite, deployed on GitHub Pages, no backend or accounts — your TMDb key, watchlist, and imported history all live in your browser.
 

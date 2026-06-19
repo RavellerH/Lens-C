@@ -3,12 +3,12 @@ import './AboutPage.css';
 export function AboutPage() {
   return (
     <div className="about-page">
-      <h1>About CineWeave</h1>
+      <h1>About Lens C</h1>
 
       <section>
         <h2>What this is</h2>
         <p>
-          CineWeave is a static, browser-only movie and series recommendation app. There's no account system and no
+          Lens C is a static, browser-only movie and series recommendation app. There's no account system and no
           backend — your TMDb key, watchlist, and any imported history stay in your browser's local storage and
           IndexedDB.
         </p>

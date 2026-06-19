@@ -2,10 +2,10 @@
 
 ## Project
 
-**Working title:** CineWeave
+**Working title:** Lens C
 **Tagline:** A cinematic movie and series recommendation app that feels instant, personal, and current.
 
-CineWeave is a static-first recommendation web app for movies and TV series built with React + Vite and deployed on GitHub Pages. The app uses free sources only in the MVP: TMDb for metadata and discovery, Trakt for optional community and personal sync, TVmaze for TV enrichment, and Letterboxd CSV exports for personal watch history import.
+Lens C is a static-first recommendation web app for movies and TV series built with React + Vite and deployed on GitHub Pages. The app uses free sources only in the MVP: TMDb for metadata and discovery, Trakt for optional community and personal sync, TVmaze for TV enrichment, and Letterboxd CSV exports for personal watch history import.
 
 The product goal is to make recommendations feel seamless from the first visit. Users should see relevant content immediately, with no hard requirement to sign in or upload files before the app becomes useful. Personalization is layered in gently afterward through optional TMDb key setup, Trakt connection, and Letterboxd CSV import.
 
