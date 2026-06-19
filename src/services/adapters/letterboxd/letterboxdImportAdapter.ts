@@ -1,6 +1,6 @@
 // Parses Letterboxd CSV exports (diary.csv, ratings.csv, watched.csv) into
-// raw entries. Letterboxd exports have no stable TMDb id, so callers must run
-// these through services/matching to resolve a MediaItem (see design.md).
+// raw entries. Letterboxd exports have no stable id into any of our sources,
+// so callers must run these through services/matching to resolve a MediaItem (see design.md).
 
 export interface LetterboxdEntry {
   name: string;

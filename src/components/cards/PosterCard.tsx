@@ -1,5 +1,4 @@
 import type { MediaItem } from '../../types/media';
-import { posterUrl } from '../../services/adapters/tmdb/tmdbAdapter';
 import { formatRating } from '../../utils/formatters';
 import { useWatchlist } from '../../app/store/watchlistStore';
 import './PosterCard.css';
@@ -11,7 +10,7 @@ interface PosterCardProps {
 
 export function PosterCard({ item, onSelect }: PosterCardProps) {
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
-  const src = posterUrl(item.posterPath);
+  const src = item.posterUrl ?? undefined;
   const inWatchlist = isInWatchlist(item.id);
 
   return (
@@ -49,7 +48,7 @@ export function PosterCard({ item, onSelect }: PosterCardProps) {
             <span>{item.year ?? '—'}</span>
             <span>·</span>
             <span>{item.type === 'movie' ? 'Movie' : 'Series'}</span>
-            <span className="poster-card__rating">★ {formatRating(item.voteAverage)}</span>
+            {item.voteAverage !== undefined && <span className="poster-card__rating">★ {formatRating(item.voteAverage)}</span>}
           </div>
         </div>
       </div>

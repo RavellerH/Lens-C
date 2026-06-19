@@ -5,9 +5,9 @@
 **Working title:** Lens C
 **Tagline:** A cinematic movie and series recommendation app that feels instant, personal, and current.
 
-Lens C is a static-first recommendation web app for movies and TV series built with React + Vite and deployed on GitHub Pages. The app uses free sources only in the MVP: TMDb for metadata and discovery, Trakt for optional community and personal sync, TVmaze for TV enrichment, and Letterboxd CSV exports for personal watch history import.
+Lens C is a static-first recommendation web app for movies and TV series built with React + Vite and deployed on GitHub Pages. The app uses free, key-free sources only in the MVP: TVmaze for TV metadata and discovery, Apple's iTunes Search/RSS APIs for movie metadata and charts, Trakt for optional community and personal sync, and Letterboxd CSV exports for personal watch history import.
 
-The product goal is to make recommendations feel seamless from the first visit. Users should see relevant content immediately, with no hard requirement to sign in or upload files before the app becomes useful. Personalization is layered in gently afterward through optional TMDb key setup, Trakt connection, and Letterboxd CSV import.
+The product goal is to make recommendations feel seamless from the first visit. Users should see relevant content immediately, with no hard requirement to sign in, paste a key, or upload files before the app becomes useful. Personalization is layered in gently afterward through optional Trakt connection and Letterboxd CSV import.
 
 The product should also prefer newer movies and series by default so recommendations feel timely and socially relevant. Older titles remain available, but the ranking and defaults should bias toward recent releases, recent seasons, and current audience momentum.
 
@@ -21,7 +21,6 @@ The app must be useful on first load. A new visitor should land on a beautiful h
 
 The app should progressively improve rather than block. It starts with public discovery, then offers low-pressure enhancements:
 
-- Enter your TMDb key once.
 - Connect Trakt for history and watchlist.
 - Upload a Letterboxd export for deeper taste modeling.
 
@@ -48,8 +47,8 @@ Even though the MVP is static, the architecture should separate UI, provider ada
 ### Primary goals
 
 - Build a polished movie and series recommendation app with a modern cinematic look and feel.
-- Deliver instant recommendations with no required account creation.
-- Use only free-access data sources in MVP: TMDb, Trakt free API, TVmaze, Letterboxd CSV import, optional MovieLens offline data.
+- Deliver instant recommendations with no required account creation and no API key setup.
+- Use only free, key-free data sources in MVP: TVmaze, Apple iTunes Search/RSS, Trakt free API, Letterboxd CSV import, optional MovieLens offline data.
 - Make recommendations skew toward newer and relevant titles by default.
 - Host entirely on GitHub Pages with React + Vite and hash routing.
 
@@ -66,7 +65,7 @@ Even though the MVP is static, the architecture should separate UI, provider ada
 - No custom account system.
 - No server-hosted recommendation model.
 - No scraping-based data acquisition.
-- No commercial launch using TMDb's free non-commercial tier.
+- No commercial launch using a provider's free non-commercial tier without revisiting terms.
 
 ## Target users
 
@@ -82,7 +81,7 @@ A power user who tracks media on Trakt or Letterboxd and wants stronger recommen
 
 - Users understand mainstream movie/TV browsing patterns.
 - Some users will not have Trakt or Letterboxd data ready.
-- Many users will tolerate one-time setup for a TMDb key if the value is obvious and the app still works before that.
+- Users expect the app to work immediately, with zero setup steps before first value.
 - The experience should feel closer to a streaming app than a spreadsheet.
 
 ## Experience vision
@@ -105,20 +104,12 @@ The user should never wonder "what do I do now?" Every screen should present str
 
 This scenario must work with no imports and no auth, assuming at least public discovery data is available.
 
-### Scenario 2: User adds TMDb key
+### Scenario 2: User imports Letterboxd export
 
-1. User opens Settings.
-2. They paste their TMDb API key.
-3. The app validates the key with a simple endpoint call.
-4. The app stores it locally and refreshes content.
-5. Discovery becomes richer and more personalized over time through caching and deeper metadata access.
-
-### Scenario 3: User imports Letterboxd export
-
-1. User uploads ZIP or CSV files from Letterboxd.
+1. User uploads CSV files from Letterboxd.
 2. App parses diary, ratings, and watched entries.
-3. App maps titles to TMDb IDs using title + year.
-4. App calculates a taste profile: favorite genres, directors, actors, recency patterns, rating behavior.
+3. App matches titles against iTunes (movies) and TVmaze (TV) using title + year.
+4. App calculates a taste profile: favorite genres, recency patterns, rating behavior.
 5. Recommendations update to "For You" mode.
 
 ### Scenario 4: User connects Trakt
@@ -139,7 +130,7 @@ Top-level routes use hash routing for GitHub Pages compatibility, such as `/#/di
 - `/#/library` — Imported/synced user history
 - `/#/watchlist` — Local watchlist and optional Trakt watchlist view
 - `/#/search` — Search and quick discovery
-- `/#/settings` — API keys, sources, region, language, personalization options
+- `/#/settings` — sources, region, personalization options
 - `/#/about` — Data sources, privacy, attribution, disclaimers
 
 ### Route roles
@@ -152,19 +143,25 @@ Top-level routes use hash routing for GitHub Pages compatibility, such as `/#/di
 
 **Watchlist** — Locally stored items and, if available, imported Trakt watchlist.
 
-**Search** — Cross-source search across TMDb movie/TV search plus local history.
+**Search** — Cross-source search across iTunes movie search and TVmaze show search, plus local history.
 
-**Settings** — The operational heart of the app. This is where users add the TMDb key, connect Trakt, manage imports, set recency preference, and choose region/language.
+**Settings** — The operational heart of the app. This is where users connect Trakt, manage imports, set recency preference, and choose region.
 
-**About** — Must include TMDb attribution language and logos/credits as required.
+**About** — Must include TVmaze and Apple/iTunes attribution language and credits as required.
 
 ## Data sources
 
-### TMDb
+### TVmaze
 
-TMDb is the main metadata and discovery provider in MVP. It supplies movie metadata, TV metadata, cast and crew, posters and backdrops, release dates, trending/popular/top rated feeds, and search endpoints.
+TVmaze is the main TV metadata and discovery provider. It supplies show metadata, genres, cast, ratings, posters, and the daily airing schedule — all without an API key. No "trending" endpoint exists, so the app derives a "this week" proxy by merging the last 7 days of schedule data and ranking by rating.
 
-Constraints: free tier is for non-commercial use, attribution is required, rate limits exist and should be respected.
+Constraints: free, keyless, but no continuous popularity metric — the rating-based proxy is a heuristic, not true trending data. TVmaze's terms ask for a "Powered by TVmaze.com" credit/link.
+
+### Apple / iTunes
+
+Apple's iTunes Search API and RSS charts are the movie metadata and discovery provider. Search supplies title, overview, artwork, release date, and runtime. The Top Movies RSS chart supplies a rank-ordered "trending" proxy. No API key or account is required.
+
+Constraints: no cast/crew data, no "similar titles" endpoint, weaker region/language filtering than a dedicated metadata provider, artwork quality varies by title.
 
 ### Trakt
 
@@ -176,11 +173,7 @@ Constraints: OAuth2 required, free-tier usage limits exist, the app should degra
 
 Letterboxd contributes user-owned watch and rating history through CSV import. Useful files include `diary.csv`, `ratings.csv`, `watched.csv`.
 
-Constraints: no stable TMDb IDs in export, must match by title + year, no official public app API for this use case.
-
-### TVmaze
-
-TVmaze is optional but useful for series/episode metadata, especially for airing schedule and detailed episode listings.
+Constraints: no stable ids into iTunes/TVmaze in the export, must match by title + year, no official public app API for this use case.
 
 ### MovieLens
 
@@ -194,7 +187,7 @@ The app is client-first and stores most working data in memory plus local browse
 
 **MediaItem** — represents a movie or TV series enriched from external providers.
 
-Fields: `id`, `type` (movie | tv), `title`, `originalTitle`, `year`, `releaseDate`, `firstAirDate`, `tmdbId`, `tvmazeId`, `imdbId`, `genres[]`, `overview`, `posterPath`, `backdropPath`, `runtime`, `episodeCount`, `seasonCount`, `status`, `languages[]`, `originCountries[]`, `popularity`, `voteAverage`, `cast[]`, `crew[]`, `providers[]`, `sourceFlags`.
+Fields: `id`, `type` (movie | tv), `title`, `originalTitle`, `year`, `releaseDate`, `firstAirDate`, `tvmazeId`, `itunesId`, `imdbId`, `genres[]`, `overview`, `posterUrl`, `backdropUrl`, `runtime`, `episodeCount`, `seasonCount`, `status`, `originCountries[]`, `popularity`, `voteAverage`, `cast[]`, `crew[]`, `sourceFlags`. `posterUrl`/`backdropUrl` are full absolute URLs returned directly by the source adapter (no path + base-URL helper needed, unlike TMDb).
 
 **UserInteraction** — represents the user's relationship to a title.
 
@@ -206,22 +199,22 @@ Fields: `preferredGenres`, `dislikedGenres`, `preferredDirectors`, `preferredAct
 
 **AppSettings**
 
-Fields: `tmdbApiKey`, `region`, `language`, `theme`, `defaultRecencyMode`, `includeMature`, `useTrakt`, `traktToken`, `showExplanations`, `enableAnimations`.
+Fields: `region`, `theme`, `defaultRecencyMode`, `includeMature`, `useTrakt`, `traktToken`, `showExplanations`, `enableAnimations`.
 
 ### Storage strategy
 
-- `localStorage` for: app settings, TMDb key, small user preferences, lightweight local watchlist state.
+- `localStorage` for: app settings, small user preferences, lightweight local watchlist state.
 - `IndexedDB` for: cached metadata responses, imported Letterboxd data, merged normalized history, recommendation cache.
 
 This avoids pushing too much into localStorage and helps performance for larger libraries.
 
 ## Provider architecture
 
-The codebase isolates API and import logic in adapters: `tmdbAdapter`, `traktAdapter`, `letterboxdImportAdapter`, `tvmazeAdapter`.
+The codebase isolates API and import logic in adapters: `itunesAdapter`, `tvmazeAdapter`, `traktAdapter`, `letterboxdImportAdapter`.
 
-Each adapter exposes: fetch/search methods, normalization methods, error handling, rate limiting hooks, and result mapping into shared internal entities.
+Each adapter exposes: fetch/search methods, normalization methods, error handling, and result mapping into shared internal entities.
 
-This keeps the app flexible if later you replace TMDb, add OMDb or JustWatch-like data, move logic server-side for monetization, or need to support multiple recommendation backends.
+This keeps the app flexible if later you add OMDb or JustWatch-like data, move logic server-side for monetization, or need to support multiple recommendation backends.
 
 ## Recommendation system
 
@@ -272,7 +265,7 @@ The user can switch among New & Hot, Balanced, All Time, Classics Friendly. Defa
 
 ## Personalization logic
 
-**If only TMDb is available** — recommendations are public and trend-based: current trending, popular with genre filters, similar to selected title.
+**With no imported history** — recommendations are public and chart/rating-based: top movie charts, highly-rated current TV, genre filters.
 
 **If Letterboxd is imported** — build profile from ratings, watched dates, rewatches, tags if available.
 
@@ -291,14 +284,13 @@ If multiple sources disagree:
 
 ### Search modes
 
-- Global content search via TMDb
+- Global content search via iTunes (movies) and TVmaze (TV)
 - Local library search
 - Search-as-discovery suggestions
-- Similar-title recommendations
 
-### Matching Letterboxd to TMDb
+### Matching Letterboxd to iTunes/TVmaze
 
-Because Letterboxd export lacks TMDb ids, use: normalized title, year match, alternative title fallback, confidence score.
+Because Letterboxd export lacks stable ids into either source, use: normalized title, year match, alternative title fallback, confidence score.
 
 If confidence is low: show a review queue, let the user confirm a few ambiguous matches.
 
@@ -335,13 +327,13 @@ The UI should feel cinematic and modern: dark surfaces, soft gradients, large po
 
 ## UX rules
 
-**Never hard-block first use.** Even if the user has no TMDb key yet, the app shows a polished starter state. If truly required data is unavailable, show demo placeholders or a graceful explainer rather than an empty app.
+**Never hard-block first use.** The app loads straight into a fully working discovery feed — no key, signup, or setup step. If a data fetch genuinely fails, show demo placeholders or a graceful explainer rather than an empty app.
 
-**Ask only when helpful.** The app should not bombard users with setup prompts. Use contextual nudges — after browsing, suggest adding a TMDb key; after viewing recommendations, suggest import for stronger results.
+**Ask only when helpful.** The app should not bombard users with setup prompts. Use contextual nudges — after browsing, suggest importing Letterboxd history or connecting Trakt for stronger results.
 
-**Explain recommendations simply.** Every recommendation card or detail view has a short reason, like "Because you like recent sci-fi", "Trending strongly this week", "Similar cast and tone to your favorites", "New season in a genre you rate highly".
+**Explain recommendations simply.** Every recommendation card or detail view has a short reason, like "Because you like recent sci-fi", "Popular this week", "New season in a genre you rate highly".
 
-**Avoid dead ends.** Every empty state includes a next action: add TMDb key, import Letterboxd, connect Trakt, browse trending, search by title.
+**Avoid dead ends.** Every empty state includes a next action: import Letterboxd, connect Trakt, browse trending, search by title.
 
 ## Onboarding and settings
 
@@ -351,15 +343,11 @@ Home opens with a cinematic hero section, trending/recent rows, and a subtle ban
 
 ### Settings sections
 
-TMDb API key, region and language, theme, recency mode, data sources, privacy and local storage controls, reset app data.
-
-### TMDb key flow
-
-The key is user-provided, stored locally, and validated once via a test request. This is cleaner for static hosting and avoids centralizing API responsibility.
+Region, theme, recency mode, data sources, privacy and local storage controls, reset app data.
 
 ## Pages in detail
 
-**Home** — immediate delight, no-friction discovery. Sections: hero spotlight, new & hot movies, fresh series, trending this week, critically strong recent releases, improve-your-feed prompt.
+**Home** — immediate delight, no-friction discovery. Sections: hero spotlight, top movies this week, currently airing series, highly rated series this week, improve-your-feed prompt.
 
 **For You** — main recommendation destination. Sections: top picks for you, because you liked X, new series you may like, fresh releases matching your favorite genres, hidden gems this year.
 
@@ -367,9 +355,9 @@ The key is user-provided, stored locally, and validated once via a test request.
 
 **Watchlist** — intent management. Features: local watchlist, imported Trakt watchlist view if available, sort by newest/popularity/runtime.
 
-**Search** — direct lookup and discovery. Features: instant suggestions, result tabs for movies/series/people, recent searches, "search and recommend" flow.
+**Search** — direct lookup and discovery. Features: instant suggestions, result tabs for movies/series, recent searches, "search and recommend" flow.
 
-**Settings** — configuration without friction. Features: TMDb key entry, source management, recency preference, local cache clear, appearance controls.
+**Settings** — configuration without friction. Features: source management (Letterboxd, Trakt), recency preference, local cache clear, appearance controls.
 
 ## Technical architecture
 
@@ -405,7 +393,7 @@ src/
     onboarding/
   services/
     adapters/
-      tmdb/
+      itunes/
       trakt/
       tvmaze/
       letterboxd/
@@ -452,29 +440,26 @@ This reinforces the static-first design and the importance of browser-side cachi
 
 ### Sensitive items
 
-- TMDb key is user-owned and stored locally
 - Trakt OAuth token is stored locally and revocable
 - Letterboxd CSV data stays in browser storage unless the user clears it
 
 ### Risks
 
-Since this is a static site, client-side secrets are visible to the user by nature. That is acceptable for user-supplied keys, but not ideal for centrally managed commercial credentials.
+Since this is a static site, client-side secrets are visible to the user by nature. With no API keys in the app at all, this risk no longer applies to the discovery/search/recommendation path — only to the optional Trakt OAuth token.
 
 ## Attribution and legal
 
-The app must include clear attribution for TMDb and any other provider whose terms require it. TMDb requires attribution and provides official logos and branding guidance. The About page and footer should include wording such as: "This product uses the TMDb API but is not endorsed or certified by TMDb."
+The app must include clear attribution for any provider whose terms require it. TVmaze's terms ask for a "Powered by TVmaze.com" credit/link; the footer and About page include this. Apple's iTunes Search/RSS APIs don't require attribution, but the About page credits them anyway for transparency.
 
-Important: the current architecture is suitable for non-commercial use of TMDb free access. If monetization becomes real, revisit provider terms and possibly redesign the data layer.
+Important: the current architecture is suitable for non-commercial use of these free, key-free tiers. If monetization becomes real, revisit provider terms and possibly redesign the data layer.
 
 ## Error handling
 
 **API errors** — show elegant inline messages, retry where sensible, preserve last cached successful content.
 
-**Missing key** — show limited public/discovery state if possible, guide user to Settings with a clear value proposition.
-
 **Import mismatch** — flag ambiguous titles, let the user resolve manually in a lightweight review flow.
 
-**Rate limits** — TMDb and Trakt limits should trigger graceful backoff, reduced refresh rate, cached fallback content.
+**Rate limits** — Trakt limits should trigger graceful backoff, reduced refresh rate, cached fallback content. TVmaze and iTunes have no published per-key rate limit since no key is used, but the app still caches aggressively to be a good citizen.
 
 ## Analytics and observability
 
@@ -486,7 +471,7 @@ The cinematic look must still remain usable: sufficient contrast for text on dar
 
 ## Roadmap
 
-**Phase 1** — React + Vite scaffold, hash routing, cinematic home/discover page, TMDb key settings, TMDb discovery rails, local watchlist, recency-biased ranking.
+**Phase 1** — React + Vite scaffold, hash routing, cinematic home/discover page, key-free TVmaze/iTunes discovery rails, local watchlist, recency-biased ranking.
 
 **Phase 2** — Letterboxd CSV import, library page, personalized profile generation, "For You" recommendation feed.
 
@@ -496,19 +481,18 @@ The cinematic look must still remain usable: sufficient contrast for text on dar
 
 ## Open questions
 
-- Do we ship any no-key demo mode, or require a TMDb key after a limited preview?
-- Do we include TVmaze in MVP or defer until the TMDb flow is stable?
 - Do we support local export/import of app state for backup?
 - How aggressive should recency bias be by default?
 - Should the app lean more editorial/curated or algorithmic in tone?
+- Is there a better keyless "trending" proxy for TV than the rolling-week schedule-rating heuristic?
 
 ## Build guidance for Claude Code
 
 Treat this document as the product contract for scaffolding and implementation. Priorities:
 
 1. Polished UI shell first
-2. Settings + TMDb key flow
-3. Discovery rails
+2. Key-free discovery rails (TVmaze + iTunes)
+3. Settings (region, recency, data sources)
 4. Recommendation engine
 5. Imports and sync
 

@@ -8,9 +8,9 @@ export function AboutPage() {
       <section>
         <h2>What this is</h2>
         <p>
-          Lens C is a static, browser-only movie and series recommendation app. There's no account system and no
-          backend — your TMDb key, watchlist, and any imported history stay in your browser's local storage and
-          IndexedDB.
+          Lens C is a static, browser-only movie and series recommendation app. There's no account system, no
+          backend, and no API key to set up — your watchlist and any imported history stay in your browser's local
+          storage and IndexedDB.
         </p>
       </section>
 
@@ -18,36 +18,38 @@ export function AboutPage() {
         <h2>Data sources</h2>
         <ul>
           <li>
-            <strong>TMDb</strong> — metadata, posters, cast and crew, and discovery feeds (trending, popular, now playing,
-            top rated).
+            <strong>TVmaze</strong> — TV show metadata, posters, cast, ratings, and the daily airing schedule.
+          </li>
+          <li>
+            <strong>Apple / iTunes</strong> — movie metadata, artwork, and the Top Movies charts used for trending
+            picks.
           </li>
           <li>
             <strong>Letterboxd</strong> — optional CSV export import for personal watch and rating history.
           </li>
           <li>
-            <strong>Trakt</strong> and <strong>TVmaze</strong> — planned integrations for community sync and episode-level
-            enrichment.
+            <strong>Trakt</strong> — planned integration for community sync.
           </li>
         </ul>
       </section>
 
       <section>
-        <h2>TMDb attribution</h2>
+        <h2>Attribution</h2>
         <p>
-          This product uses the TMDb API but is not endorsed or certified by{' '}
-          <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
-            TMDb
+          TV data is powered by{' '}
+          <a href="https://www.tvmaze.com/" target="_blank" rel="noreferrer">
+            TVmaze.com
           </a>
-          . All movie and TV metadata, posters, and backdrops are provided by TMDb under their free, non-commercial API
-          terms.
+          . Movie data and artwork come from the Apple iTunes Search and RSS APIs. Neither service requires a key or
+          account — that's what keeps Lens C usable instantly, with no setup step.
         </p>
       </section>
 
       <section>
         <h2>Privacy</h2>
         <p>
-          Your TMDb key and any imported watch history are stored only on this device. Nothing is uploaded to a server
-          we control. You can clear everything from the Settings page at any time.
+          Your watchlist and any imported watch history are stored only on this device. Nothing is uploaded to a
+          server we control. You can clear everything from the Settings page at any time.
         </p>
       </section>
     </div>

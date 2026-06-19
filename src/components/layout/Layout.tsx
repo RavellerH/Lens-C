@@ -9,7 +9,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <CommandBar />
       <main className="layout__main">{children}</main>
       <footer className="layout__footer">
-        This product uses the TMDb API but is not endorsed or certified by TMDb. ·{' '}
+        TV data powered by TVmaze.com · Movie data from Apple/iTunes ·{' '}
         <Link to="/about">About &amp; data sources</Link>
       </footer>
     </div>

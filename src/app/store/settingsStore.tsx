@@ -11,7 +11,6 @@ interface SettingsContextValue {
   settings: AppSettings;
   updateSettings: (patch: Partial<AppSettings>) => void;
   resetAppData: () => void;
-  hasTmdbKey: boolean;
 }
 
 const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
@@ -32,10 +31,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setSettings(DEFAULT_SETTINGS);
   };
 
-  const value = useMemo<SettingsContextValue>(
-    () => ({ settings, updateSettings, resetAppData, hasTmdbKey: settings.tmdbApiKey.trim().length > 0 }),
-    [settings],
-  );
+  const value = useMemo<SettingsContextValue>(() => ({ settings, updateSettings, resetAppData }), [settings]);
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }

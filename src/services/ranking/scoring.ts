@@ -13,7 +13,7 @@ function recencyScore(item: MediaItem): number {
 }
 
 function popularityScore(item: MediaItem): number {
-  // TMDb popularity is unbounded; compress it into a 0-1 range with a soft curve.
+  // item.popularity is a per-source proxy (chart rank for movies, rating-derived for TV); compress into 0-1 with a soft curve.
   return Math.min(1, Math.log10(item.popularity + 1) / 3);
 }
 
@@ -73,7 +73,7 @@ export function explainRecommendation(item: MediaItem, context: ScoreContext): s
     return `Because you like ${item.genres.find((g) => context.likedGenres!.has(g))}`;
   }
   if (age <= 1) return 'New release';
-  if (popularityScore(item) > 0.7) return 'Trending strongly this week';
+  if (popularityScore(item) > 0.7) return 'Popular this week';
   if (context.recencyMode === 'classics-friendly' && age > 10) return 'A classic worth revisiting';
-  return 'Popular right now';
+  return 'Worth a look';
 }

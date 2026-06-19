@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { getCached, setCached } from '../../services/cache/indexedDbCache';
-import { TmdbAuthError, TmdbRateLimitError } from '../../services/adapters/tmdb/tmdbAdapter';
 
 const DEFAULT_MAX_AGE_MS = 1000 * 60 * 30;
 
@@ -47,12 +46,7 @@ export function useCachedFetch<T>(cacheKey: string | undefined, fetcher: () => P
           setState((prev) => ({ ...prev, loading: false }));
           return;
         }
-        const message =
-          err instanceof TmdbAuthError
-            ? err.message
-            : err instanceof TmdbRateLimitError
-              ? err.message
-              : 'Something went wrong loading this list.';
+        const message = err instanceof Error ? err.message : 'Something went wrong loading this list.';
         setState({ data: undefined, loading: false, error: message });
       }
     }
