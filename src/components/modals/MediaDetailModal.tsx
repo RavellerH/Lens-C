@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import type { MediaItem } from '../../types/media';
-import { backdropUrl } from '../../services/adapters/tmdb/tmdbAdapter';
 import { formatRating, formatRuntime } from '../../utils/formatters';
 import { useWatchlist } from '../../app/store/watchlistStore';
 import './MediaDetailModal.css';
@@ -13,7 +12,7 @@ interface MediaDetailModalProps {
 export function MediaDetailModal({ item, onClose }: MediaDetailModalProps) {
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
   const inWatchlist = isInWatchlist(item.id);
-  const backdrop = backdropUrl(item.backdropPath);
+  const backdrop = item.backdropUrl ?? undefined;
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -45,7 +44,7 @@ export function MediaDetailModal({ item, onClose }: MediaDetailModalProps) {
             <span className="media-modal__chip">{item.year ?? '—'}</span>
             <span className="media-modal__chip">{item.type === 'movie' ? 'Movie' : 'Series'}</span>
             {item.runtime ? <span className="media-modal__chip">{formatRuntime(item.runtime)}</span> : null}
-            <span className="media-modal__chip">★ {formatRating(item.voteAverage)}</span>
+            {item.voteAverage !== undefined && <span className="media-modal__chip">★ {formatRating(item.voteAverage)}</span>}
             {item.genres.slice(0, 3).map((genre) => (
               <span key={genre} className="media-modal__chip">
                 {genre}

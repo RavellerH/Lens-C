@@ -1,5 +1,4 @@
 import type { MediaItem } from '../../types/media';
-import { backdropUrl } from '../../services/adapters/tmdb/tmdbAdapter';
 import { useWatchlist } from '../../app/store/watchlistStore';
 import './HeroPanel.css';
 
@@ -10,7 +9,7 @@ interface HeroPanelProps {
 
 export function HeroPanel({ item, onMoreInfo }: HeroPanelProps) {
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
-  const backdrop = backdropUrl(item.backdropPath);
+  const backdrop = item.backdropUrl ?? undefined;
 
   return (
     <section className="hero-panel">

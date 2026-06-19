@@ -6,7 +6,8 @@ import type { MediaItem } from '../../types/media';
 import type { UserInteraction } from '../../types/user';
 import { letterboxdImportAdapter, type LetterboxdEntry } from '../../services/adapters/letterboxd/letterboxdImportAdapter';
 import { CONFIDENT_MATCH_THRESHOLD, findBestMatch } from '../../services/matching/titleMatcher';
-import { tmdbAdapter } from '../../services/adapters/tmdb/tmdbAdapter';
+import { itunesAdapter } from '../../services/adapters/itunes/itunesAdapter';
+import { tvmazeAdapter } from '../../services/adapters/tvmaze/tvmazeAdapter';
 import { loadImportData, saveImportData } from '../../services/cache/indexedDbCache';
 import { useSettings } from './settingsStore';
 
@@ -51,14 +52,18 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
         const entryLists: LetterboxdEntry[][] = files.map((file) => letterboxdImportAdapter.parseDiaryOrRatings(file.text));
         const entries = letterboxdImportAdapter.mergeEntries(...entryLists).slice(0, MAX_IMPORT_ENTRIES);
 
-        const opts = { apiKey: settings.tmdbApiKey, region: settings.region, language: settings.language };
+        const opts = { region: settings.region };
         const mediaItems: MediaItem[] = [];
         const interactions: UserInteraction[] = [];
         let unmatched = 0;
 
         for (const entry of entries) {
           try {
-            const candidates = await tmdbAdapter.searchMulti(opts, entry.name);
+            const [movieCandidates, tvCandidates] = await Promise.all([
+              itunesAdapter.searchMovies(opts, entry.name).catch(() => []),
+              tvmazeAdapter.searchShows(entry.name).catch(() => []),
+            ]);
+            const candidates = [...movieCandidates, ...tvCandidates];
             const best = findBestMatch(entry, candidates);
             if (!best || best.confidence < CONFIDENT_MATCH_THRESHOLD) {
               unmatched += 1;
@@ -92,7 +97,7 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
         setImporting(false);
       }
     },
-    [settings.tmdbApiKey, settings.region, settings.language],
+    [settings.region],
   );
 
   const mediaById = useMemo(() => new Map(data.mediaItems.map((item) => [item.id, item])), [data.mediaItems]);

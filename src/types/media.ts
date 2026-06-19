@@ -21,21 +21,20 @@ export interface MediaItem {
   year?: number;
   releaseDate?: string;
   firstAirDate?: string;
-  tmdbId: number;
   tvmazeId?: number;
+  itunesId?: number;
   imdbId?: string;
   genres: string[];
   overview: string;
-  posterPath?: string | null;
-  backdropPath?: string | null;
+  posterUrl?: string | null;
+  backdropUrl?: string | null;
   runtime?: number;
   episodeCount?: number;
   seasonCount?: number;
   status?: string;
-  languages?: string[];
   originCountries?: string[];
   popularity: number;
-  voteAverage: number;
+  voteAverage?: number;
   cast?: CastMember[];
   crew?: CrewMember[];
   sourceFlags?: Record<string, boolean>;
@@ -44,5 +43,4 @@ export interface MediaItem {
 
 export interface MediaDetail extends MediaItem {
   tagline?: string;
-  genreIds?: number[];
 }

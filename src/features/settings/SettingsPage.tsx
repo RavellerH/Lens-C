@@ -2,7 +2,6 @@ import { useRef, useState, type ChangeEvent } from 'react';
 import { useSettings } from '../../app/store/settingsStore';
 import { useLibrary } from '../../app/store/libraryStore';
 import { clearAllCaches } from '../../services/cache/indexedDbCache';
-import { ApiKeyForm } from '../../components/forms/ApiKeyForm';
 import type { RecencyMode } from '../../types/settings';
 import './SettingsPage.css';
 
@@ -44,14 +43,8 @@ export function SettingsPage() {
       <h1>Settings</h1>
 
       <section className="settings-section">
-        <h2>TMDb API key</h2>
-        <p className="settings-section__desc">Required for discovery, search, and recommendations. Free and user-owned.</p>
-        <ApiKeyForm />
-      </section>
-
-      <section className="settings-section">
-        <h2>Region &amp; language</h2>
-        <p className="settings-section__desc">Controls what counts as "now playing" and which titles surface first.</p>
+        <h2>Region</h2>
+        <p className="settings-section__desc">Controls which country's TV schedule and movie charts surface first.</p>
         <div className="settings-field">
           <label htmlFor="region">Region</label>
           <select id="region" value={settings.region} onChange={(event) => updateSettings({ region: event.target.value })}>
@@ -62,17 +55,6 @@ export function SettingsPage() {
             <option value="DE">Germany</option>
             <option value="FR">France</option>
             <option value="IN">India</option>
-          </select>
-        </div>
-        <div className="settings-field">
-          <label htmlFor="language">Language</label>
-          <select id="language" value={settings.language} onChange={(event) => updateSettings({ language: event.target.value })}>
-            <option value="en-US">English (US)</option>
-            <option value="en-GB">English (UK)</option>
-            <option value="es-ES">Español</option>
-            <option value="fr-FR">Français</option>
-            <option value="de-DE">Deutsch</option>
-            <option value="hi-IN">हिन्दी</option>
           </select>
         </div>
       </section>
@@ -136,7 +118,7 @@ export function SettingsPage() {
           <div className="settings-row">
             <input ref={fileInputRef} type="file" accept=".csv" multiple onChange={handleFileSelect} disabled={importing} />
           </div>
-          {importing && <p className="settings-section__note">Matching your titles against TMDb…</p>}
+          {importing && <p className="settings-section__note">Matching your titles against Apple and TVmaze…</p>}
           {lastImportResult && (
             <p className="settings-import-result">
               Imported {lastImportResult.matched} titles{lastImportResult.unmatched > 0 ? ` (${lastImportResult.unmatched} couldn't be matched)` : ''}.

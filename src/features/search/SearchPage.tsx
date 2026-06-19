@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSettings } from '../../app/store/settingsStore';
-import { tmdbAdapter } from '../../services/adapters/tmdb/tmdbAdapter';
+import { itunesAdapter } from '../../services/adapters/itunes/itunesAdapter';
+import { tvmazeAdapter } from '../../services/adapters/tvmaze/tvmazeAdapter';
 import { debounce } from '../../utils/formatters';
 import { readLocal, writeLocal } from '../../utils/storage';
 import type { MediaItem, MediaType } from '../../types/media';
@@ -13,7 +14,7 @@ type Tab = 'all' | MediaType;
 const RECENT_KEY = 'recent-searches';
 
 export function SearchPage() {
-  const { settings, hasTmdbKey } = useSettings();
+  const { settings } = useSettings();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') ?? '';
   const [query, setQuery] = useState(initialQuery);
@@ -23,21 +24,22 @@ export function SearchPage() {
   const [selected, setSelected] = useState<MediaItem | undefined>();
   const [recent, setRecent] = useState<string[]>(() => readLocal(RECENT_KEY, { items: [] as string[] }).items);
 
-  const opts = useMemo(
-    () => ({ apiKey: settings.tmdbApiKey, region: settings.region, language: settings.language }),
-    [settings.tmdbApiKey, settings.region, settings.language],
-  );
+  const opts = useMemo(() => ({ region: settings.region }), [settings.region]);
 
   const runSearch = useMemo(
     () =>
       debounce(async (value: string) => {
-        if (!hasTmdbKey || !value.trim()) {
+        if (!value.trim()) {
           setResults([]);
           return;
         }
         setLoading(true);
         try {
-          const items = await tmdbAdapter.searchMulti(opts, value);
+          const [movies, shows] = await Promise.all([
+            itunesAdapter.searchMovies(opts, value).catch(() => []),
+            tvmazeAdapter.searchShows(value).catch(() => []),
+          ]);
+          const items = [...movies, ...shows];
           setResults(items);
           if (items.length > 0 && value.trim().length > 2) {
             setRecent((prev) => {
@@ -50,7 +52,7 @@ export function SearchPage() {
           setLoading(false);
         }
       }, 350),
-    [opts, hasTmdbKey],
+    [opts],
   );
 
   useEffect(() => {
@@ -88,9 +90,7 @@ export function SearchPage() {
         ))}
       </div>
 
-      {!hasTmdbKey ? (
-        <p className="search-page__empty">Add your TMDb key in Settings to search.</p>
-      ) : loading ? (
+      {loading ? (
         <p className="search-page__empty">Searching…</p>
       ) : filtered.length === 0 ? (
         query ? <p className="search-page__empty">No results for "{query}".</p> : null
