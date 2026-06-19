@@ -1,6 +1,6 @@
 import { openDB, type IDBPDatabase } from 'idb';
 
-const DB_NAME = 'cineweave';
+const DB_NAME = 'lens-c';
 const DB_VERSION = 1;
 const METADATA_STORE = 'metadata-cache';
 const IMPORT_STORE = 'imports';

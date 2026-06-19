@@ -50,7 +50,7 @@ export function HomePage() {
       <div className="home-page__setup">
         <h1>See what's trending in seconds.</h1>
         <p>
-          CineWeave runs entirely in your browser — there's no account to create. Add a free TMDb key once and your
+          Lens C runs entirely in your browser — there's no account to create. Add a free TMDb key once and your
           personalized, recency-biased discovery feed unlocks instantly.
         </p>
         <ApiKeyForm />

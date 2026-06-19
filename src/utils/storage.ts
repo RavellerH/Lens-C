@@ -1,4 +1,4 @@
-const PREFIX = 'cineweave:';
+const PREFIX = 'lens-c:';
 
 export function readLocal<T>(key: string, fallback: T): T {
   try {
